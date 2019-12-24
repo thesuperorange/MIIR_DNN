@@ -357,6 +357,7 @@ if __name__ == '__main__':
     parser.add_argument('-i', '--detect_face', action='store_true')
     parser.add_argument('-e', '--ext',  default='png', help='png,bmp,jpg')
     parser.add_argument('-b', '--begin_frame', default = 0, help='set start frame')
+    parser.add_argument('-i', '--input_path', default='MI3', help='input image path')
     parser.add_argument('--threshold',default = 0.8,help='confidence threshold') 
     args = parser.parse_args()
     
@@ -374,7 +375,7 @@ if __name__ == '__main__':
     #bbox file from detector
     filename = os.path.join('input_detections',method + "_" + dataset + ".txt")
     #source image
-    input_path = '/home/superorange5/MI3/'+dataset+'/ORIG/ch'+str(channel)
+    input_path = os.path.join(args.input_path,dataset,'ORIG/ch'+str(channel))
     #output image with bbox
     output_folder = os.path.join('output',method + "_" + dataset + "_ch" + str(channel) + "_results")
 

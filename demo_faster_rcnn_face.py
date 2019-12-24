@@ -369,6 +369,7 @@ if __name__ == '__main__':
     #    parser.add_argument('-f', '--frame_num', default=548, help='total frame')
     parser.add_argument('-s', '--savefig', action='store_true')
     parser.add_argument('-l', '--savelog', action='store_true')
+    parser.add_argument('-i', '--input_path', default='MI3', help='input image path')
     #    parser.add_argument('-i', '--detect_face', action='store_true')
     #    parser.add_argument('-e', '--ext',  default='png', help='png,bmp,jpg')
     #    parser.add_argument('-b', '--begin_frame', default = 0, help='set start frame')
@@ -379,7 +380,7 @@ if __name__ == '__main__':
     bbox_log = args.savelog
     dataset = args.dataset
     channel_list = [2, 4, 6]
-    MI3path = '/home/waue0920/'
+    MI3path = args.input_path
 
     fo = open("faster-rcnn_face_" + dataset + ".txt", "w")
 
