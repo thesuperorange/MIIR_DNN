@@ -11,7 +11,21 @@ param_confidence = 0
 param_visualize = 0
 
 
-def detect(dataset, foldername, filename, ch, mode_img, bbox_log):
+def mask_detect(model_path,fo,dataset, foldername, filename, ch, mode_img, bbox_log):
+
+
+    labelsPath = os.path.sep.join([model_path, "object_detection_classes_coco.txt"])
+    LABELS = open(labelsPath).read().strip().split("\n")
+    COLORS = np.random.uniform(0, 255, size=(len(LABELS), 3))
+
+    weightsPath = os.path.sep.join([model_path, "frozen_inference_graph.pb"])
+    configPath = os.path.sep.join([model_path, "mask_rcnn_inception_v2_coco_2018_01_28.pbtxt"])
+
+    # load our Mask R-CNN trained on the COCO dataset (90 classes)
+    # from disk
+    print("[INFO] loading Mask R-CNN from disk...")
+    net = cv2.dnn.readNetFromTensorflow(weightsPath, configPath)
+
     image_num = os.path.splitext(filename)[0]
     output_folder = os.path.join('output', dataset ,"ch" + str(ch))
     if not os.path.exists(output_folder):
@@ -123,58 +137,3 @@ def detect(dataset, foldername, filename, ch, mode_img, bbox_log):
             #cv2.imshow("Output", clone)
             #cv2.waitKey(0)
 
-if __name__ == '__main__':
-
-    # construct the argument parse and parse the arguments
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-d", "--dataset", required=True, help="input image dataset")
-
-    # ap.add_argument("-m", "--mask-rcnn", required=True,
-    # 	help="base path to mask-rcnn directory")i
-    ap.add_argument('-v', '--visualize', action='store_true',help="whether or not we are going to visualize each instance")
-    ap.add_argument('-l', '--savelog', action='store_true',help="whether or not print results in a file")	
-    ap.add_argument('-i', '--input_path', default='MI3', help='input image path')
-
-    # 	help="minimum probability to filter weak detections")
-    # ap.add_argument("-t", "--threshold", type=float, default=0.3,
-    # 	help="minimum threshold for pixel-wise mask segmentation")
-    args = vars(ap.parse_args())
-    dataset = args['dataset']
-    vis = args['visualize']
-    log = args['savelog']
-
-    param_mask_rcnn = "models"
-
-  # load the COCO class labels our Mask R-CNN was trained on
-    labelsPath = os.path.sep.join([param_mask_rcnn,"object_detection_classes_coco.txt"])
-    LABELS = open(labelsPath).read().strip().split("\n")
-    COLORS = np.random.uniform(0, 255, size=(len(LABELS), 3))
-    # load the set of colors that will be used when visualizing a given
-    # instance segmentation
-#    colorsPath = os.path.sep.join([param_mask_rcnn, "colors.txt"])
-#    COLORS = open(colorsPath).read().strip().split("\n")
-#    COLORS = [np.array(c.split(",")).astype("int") for c in COLORS]
-#    COLORS = np.array(COLORS, dtype="uint8")
-
-    # derive the paths to the Mask R-CNN weights and model configuration
-    weightsPath = os.path.sep.join([param_mask_rcnn,"frozen_inference_graph.pb"])
-    configPath = os.path.sep.join([param_mask_rcnn,"mask_rcnn_inception_v2_coco_2018_01_28.pbtxt"])
-
-    # load our Mask R-CNN trained on the COCO dataset (90 classes)
-    # from disk
-    print("[INFO] loading Mask R-CNN from disk...")
-    net = cv2.dnn.readNetFromTensorflow(weightsPath, configPath)
-
-
-    MI3path = args['input_path']
-    method='mask-rcnn'
-#    dataset = 'Pathway1_1'
-    fo = open(method+'_'+dataset+ ".txt", "w")
-    channel_list = [2,4,6]
-    for channel in channel_list:
-        input_folder = os.path.join(MI3path,dataset,"ORIG","ch"+str(channel))
-        for filename in os.listdir(input_folder):
-            print(filename)
-            detect(dataset, input_folder, filename, channel,vis,log)
-            #detect(input_folder, filename,output_folder='output/'+dataset+'ch'+channel)
-    fo.close()
