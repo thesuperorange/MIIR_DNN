@@ -27,7 +27,7 @@ def mask_detect(model_path,fo,dataset, foldername, filename, ch, mode_img, bbox_
     net = cv2.dnn.readNetFromTensorflow(weightsPath, configPath)
 
     image_num = os.path.splitext(filename)[0]
-    output_folder = os.path.join('output', dataset ,"ch" + str(ch))
+    output_folder = os.path.join('output', 'mask-rcnn_'+dataset ,"ch" + str(ch))
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 

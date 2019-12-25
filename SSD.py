@@ -19,7 +19,7 @@ def SSD_detect(model_path,fo,dataset, foldername, filename, ch, mode_img, bbox_l
 	# initialize the list of class labels MobileNet SSD was trained to
 	# detect, then generate a set of bounding box colors for each class
 
-	labelsPath = os.path.sep.join([SSD_model, "object_detection_classes_coco.txt"])
+	labelsPath = os.path.sep.join([model_path, "object_detection_classes_coco.txt"])
 	CLASSES = open(labelsPath).read().strip().split("\n")
 
 	COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
@@ -73,7 +73,7 @@ def SSD_detect(model_path,fo,dataset, foldername, filename, ch, mode_img, bbox_l
 	if mode_img:
 		# show the output image
 		# cv2.imshow("Output", image)
-		output_folder = dataset+"_"+ch
+		output_folder = 'SSD_'+dataset+"_"+ch
 		if not os.path.exists(output_folder):
 			os.mkdir(output_folder)
 		output_name = output_folder+"/"+filename

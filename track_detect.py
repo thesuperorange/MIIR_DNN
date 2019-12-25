@@ -15,7 +15,7 @@ from tracking.data_prov import RegionExtractor
 from draw_result import draw_image
 from modules.utils import overlap_ratio
 opts = yaml.safe_load(open('tracking/options.yaml','r'))
-ext = 'png'
+
 class MDTrack:
     def __init__(self, frame_num, file_path, tracklet_num,frameBBoxList):
         self.frame_num = frame_num
@@ -121,10 +121,8 @@ class MDTrack:
         # last_bbox = -1
         # next_frame = -1
 #        frameA_path = os.path.join(self.FILE_PATH, str(frame_idx) + "."+ext)
-        if ext =='bmp':
-            frameA_path = os.path.join(self.FILE_PATH, str(frame_idx) + ".bmp")
-        else:
-            frameA_path = os.path.join(self.FILE_PATH, str(frame_idx).zfill(5)+"."+ext)
+
+        frameA_path = os.path.join(self.FILE_PATH, str(frame_idx).zfill(5)+".png")
 
         target_bbox = np.array(init_bbox)
         # Init model
@@ -198,10 +196,9 @@ class MDTrack:
             if frameB_idx> self.frame_num:
                 break
             else:
-                if ext =='bmp':
-                    frameB_path = os.path.join(self.FILE_PATH, str(frameB_idx) + ".bmp")
-                else:
-                    frameB_path = os.path.join(self.FILE_PATH, str(frameB_idx).zfill(5)+"."+ext)
+
+
+                frameB_path = os.path.join(self.FILE_PATH, str(frameB_idx).zfill(5)+".png")
 
                 # ------------track by MDNet------------
                 # Load image
@@ -350,12 +347,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--channel', default=6, help='which channel')
     parser.add_argument('-t', '--tracklet_num', default=10, help='length of tracklet')
-    parser.add_argument('-m', '--method',  default='faster-rcnn2', help='algorithm')
+    parser.add_argument('-m', '--method',  default='faster-rcnn', help='algorithm')
     parser.add_argument('-d', '--dataset',  default='Pathway1_1', help='dataset')
-    parser.add_argument('-f', '--frame_num', default=548, help='total frame')
+    parser.add_argument('-n', '--frame_num', default=548, help='total frame')
     parser.add_argument('-s', '--savefig', action='store_true')
-    parser.add_argument('-i', '--detect_face', action='store_true')
-    parser.add_argument('-e', '--ext',  default='png', help='png,bmp,jpg')
+    parser.add_argument('-f', '--face', action='store_true', help="whether or not is face detection")
+
     parser.add_argument('-b', '--begin_frame', default = 0, help='set start frame')
     parser.add_argument('-i', '--input_path', default='MI3', help='input image path')
     parser.add_argument('--threshold',default = 0.8,help='confidence threshold') 
@@ -369,7 +366,7 @@ if __name__ == '__main__':
     savefig = args.savefig
     detect_face = args.detect_face
     TH = args.threshold
-    ext = args.ext
+
     start_frame = int(args.begin_frame)
     print("dataset = {}, method = {}, channel = {}, frame_num = {}".format(dataset,method,channel,frame_num))
     #bbox file from detector
@@ -405,5 +402,5 @@ if __name__ == '__main__':
     afile.close()
 
     if(args.savefig):
-        draw_image(input_path, output_folder, MDNET.GLOBAL_TRACK_LIST,ext)
+        draw_image(input_path, output_folder, MDNET.GLOBAL_TRACK_LIST)
 

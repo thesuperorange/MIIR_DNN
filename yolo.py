@@ -30,7 +30,7 @@ def yolo_detect(model_path,fo, dataset, foldername, filename, ch, mode_img, bbox
     net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
 
     image_num = os.path.splitext(filename)[0]
-    output_folder = 'output/' + dataset + "_ch" + str(ch)
+    output_folder = 'output/yolo_' + dataset + "_ch" + str(ch)
     if not os.path.exists(output_folder):
         os.mkdir(output_folder)
 
